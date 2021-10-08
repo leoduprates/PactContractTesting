@@ -1,0 +1,30 @@
+version: '3'
+services:
+  pact-postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pact
+    volumes:
+      - pact_postgresql:/var/lib/postgresql
+      - pact_postgresql_data:/var/lib/postgresql/data
+
+  pact-broker:
+    image: dius/pact-broker:latest
+    ports:
+      - "3080:80"
+    depends_on:
+      - pact-postgres
+    environment:
+      PACT_BROKER_DATABASE_USERNAME: postgres
+      PACT_BROKER_DATABASE_PASSWORD: password
+      PACT_BROKER_DATABASE_HOST: pact-postgres
+      PACT_BROKER_DATABASE_NAME: pact
+      # Authentication
+      # PACT_BROKER_BASIC_AUTH_USERNAME: <USER>
+      # PACT_BROKER_BASIC_AUTH_PASSWORD: <PASSWORD>
+      # PACT_BROKER_ALLOW_PUBLIC_READ: "true"
+
+volumes:
+  pact_postgresql:
+  pact_postgresql_data:

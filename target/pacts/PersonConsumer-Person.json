@@ -1,0 +1,79 @@
+{
+  "provider": {
+    "name": "Person"
+  },
+  "consumer": {
+    "name": "PersonConsumer"
+  },
+  "interactions": [
+    {
+      "description": "Retrieve Person",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/person"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "name": "Joe Ramone",
+            "id": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+          }
+        ],
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 0
+                }
+              ],
+              "combine": "AND"
+            },
+            "$[*].id": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ],
+              "combine": "AND"
+            },
+            "$[*].name": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        },
+        "generators": {
+          "body": {
+            "$[*].id": {
+              "type": "Uuid"
+            }
+          }
+        }
+      },
+      "providerStates": [
+        {
+          "name": "There is a person"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.0.10"
+    }
+  }
+}

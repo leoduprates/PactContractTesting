@@ -1,0 +1,47 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "au.com.dius.pact" version "4.1.0"
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.5'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.10'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.0'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.5.5'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.24'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.15.0'
+    developmentOnly group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.5.5'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.5'
+    testImplementation group: 'au.com.dius', name: 'pact-jvm-consumer-junit', version: '4.0.10'
+    testImplementation group: 'au.com.dius', name: 'pact-jvm-provider-junit', version: '4.0.10'
+}
+
+test {
+    useJUnit()
+    systemProperties(System.getProperties())
+    // systemProperties['pact.verifier.publishResults'] = true
+}
+
+pact {
+    publish {
+        pactBrokerUrl = 'http://localhost:3080/'
+        pactDirectory = file('target/pacts')
+    }
+}
+
+pactPublish.dependsOn test
